@@ -104,7 +104,7 @@ export class Inventario {
         if(hayProductos){
             let devolverInventario = "";
             for(let i = this.inventario.length - 1; i >= 0; i--){
-                devolverInventario += this.inventario[i].info();
+                devolverInventario += this.inventario[i].infoHtml();
             }
             return devolverInventario;
         } else {
@@ -120,7 +120,7 @@ export class Inventario {
                 this.inventario[i] = this.inventario[i + 1]; 
             }
             this.inventario.pop();
-            return `Se extrajo el primer producto: ${auxiliar.info()}`;
+            return `Se extrajo el primer producto: ${auxiliar.infoHtml()}`;
         } else {
             return `Aun no hay productos en el inventario`;
         }
