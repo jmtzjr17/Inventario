@@ -58,7 +58,7 @@ document.getElementById("btnBuscar").addEventListener("click", () => {
     const codigo = document.getElementById('txtCod').value;
     const verificacionCodigo = verificarCamposCodigo(codigo);
     if(verificacionCodigo){
-        const producto = miInventario.buscarPorCodigo(codigo);
+        const producto = miInventario.buscarPorCodigo(codigo,miInventario.primero);
         salida.innerHTML = producto ? `Si existe el producto con el codigo ${codigo}` : `No existe el producto con el codigo ${codigo}`; 
     } else {
         salida.innerHTML = `No se lleno el campo codigo, Intenta de nuevo`;
@@ -70,7 +70,7 @@ document.getElementById("btnEliminar").addEventListener("click", () => {
     const codigo = document.getElementById('txtCod').value;
     const verificacionCodigo = verificarCamposCodigo(codigo);
     if(verificacionCodigo){
-        salida.innerHTML = miInventario.eliminarPorCodigo(codigo);
+        salida.innerHTML = miInventario.eliminarPorCodigo(codigo,miInventario.primero);
     } else {
         salida.innerHTML = `No se lleno el campo codigo, Intenta de nuevo`;
     }
@@ -82,7 +82,7 @@ document.getElementById("btnAgregarPos").addEventListener("click", () => {
     const verificacionProducto = verificarCamposProducto(producto.codigo,producto.nombre,producto.cantidad,producto.costo);
     const posicion = document.getElementById('txtPos').value;
     if(verificacionProducto && posicion != ""){
-        salida.innerHTML = miInventario.agregarProductoPosicion(producto,posicion);
+        salida.innerHTML = miInventario.agregarProductoPosicion(producto,Number(posicion),miInventario.primero);
     } else {
         salida.innerHTML = `No se llenaron los campos necesarios para realizar la operacion intenta de nuevo`;
     }
@@ -107,7 +107,7 @@ document.getElementById("btnExtraerPrimero").addEventListener("click", () => {
 });
 
 document.getElementById("btnListar").addEventListener("click", () => {
-    salida.innerHTML = miInventario.listar();
+    salida.innerHTML = miInventario.listar(miInventario.primero);
     limpiarCampos();
 });
 
