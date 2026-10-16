@@ -5,16 +5,40 @@ export class Inventario {
 
     //----------------- Extras -------------------------------
     agregarse(nuevoP,nodo){
-        if(nodo.siguiente === null){
+        if (nodo.siguiente === null) {
             nodo.siguiente = nuevoP;
+            nodo.siguiente.anterior = nodo;
+        } else if (nuevoP.codigo < nodo.siguiente.codigo && nuevoP.codigo > nodo.codigo) {
+            nuevoP.siguiente = nodo.siguiente;
+            nuevoP.anterior = nodo;
+            nodo.siguiente = nuevoP;
+            nuevoP.siguiente.anterior = nuevoP;
         } else {
             this.agregarse(nuevoP,nodo.siguiente);
         }
+    }   
+
+    existeProducto(codigo) {
+    let nodo = this.primero;
+    while (nodo !== null) {
+        if (nodo.codigo === codigo) {
+            return true; 
+        }
+        nodo = nodo.siguiente; 
     }
-    // ----------------------------------------------------------
+        return false; 
+    }
+    // ------------------------------------------------------
 
     agregarProducto(producto){
-        if(this.primero === null){
+        if (this.existeProducto(producto.codigo)) {
+            return `Error: El código ${producto.codigo} ya existe.`;
+        }
+        if (this.primero === null){
+            this.primero = producto;
+        } else if (producto.codigo < this.primero.codigo) {
+            producto.siguiente = this.primero;
+            this.primero.anterior = producto;
             this.primero = producto;
         } else {
             this.agregarse(producto,this.primero);
@@ -63,25 +87,6 @@ export class Inventario {
         }
     }
 
-    agregarProductoPosicion(producto,posicion,nodo){
-        let i = 2;
-        if(posicion === 1){
-            this.primero = producto;
-            this.primero.siguiente = nodo;
-        } else {
-            while(nodo){
-                if(i === posicion){
-                    producto.siguiente = nodo.siguiente;
-                    nodo.siguiente = producto;
-                    break;
-                } else{
-                    nodo = nodo.siguiente;
-                    i++;
-                }
-            }
-        }
-        return `Se ha agregado ${producto.nombre} en la posicion ${posicion}`;
-    }
 
     listar(nodo){
         let texto = ``;
@@ -109,9 +114,10 @@ export class Inventario {
         return `Se extrajo el producto ${auxiliar.nombre}`;
     }
 
-    agregarProductoInicio(producto){
-        producto.siguiente = this.primero;
-        this.primero = producto;
-        return `Se ha agregado al inicio el producto ${producto.nombre}`;
+    extraerUltimoElemento(){
+        let auxiliar = this.primero;
+        this.primero = this.primero.siguiente;
+        return `Se extrajo el producto ${auxiliar.nombre}`;
     }
+
 }
