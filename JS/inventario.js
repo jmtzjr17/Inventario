@@ -64,15 +64,29 @@ export class Inventario {
     }
 
     eliminarPorCodigo(codigo,nodo){
+        if(this.primero === null){
+            return `No hay productos en el inventario`;
+        }
         let encontrado = false;
-        if(nodo.codigo === codigo){
+        if (this.primero.siguiente === null && this.primero.codigo === codigo){
+            this.primero = null;
+            encontrado = true;
+        } else if(nodo.codigo === codigo){
             this.primero = this.primero.siguiente;
+            this.primero.anterior = null;
             encontrado = true;
         } else {
             while(nodo.siguiente !== null){
                 if(nodo.siguiente.codigo === codigo){
-                    nodo.siguiente = nodo.siguiente.siguiente;
-                    encontrado = true;
+                    if(nodo.siguiente.siguiente !== null){
+                        nodo.siguiente = nodo.siguiente.siguiente;
+                        nodo.siguiente.anterior = nodo;
+                        encontrado = true;
+                    } else {
+                        nodo.siguiente.anterior = null;
+                        nodo.siguiente = null;
+                        encontrado = true;
+                    }
                     break;
                 } else {
                     nodo = nodo.siguiente;
@@ -89,6 +103,9 @@ export class Inventario {
 
 
     listar(nodo){
+        if(this.primero === null){
+            return `No hay productos en el inventario`;
+        }
         let texto = ``;
         while(nodo){
             texto += nodo.info();
@@ -98,6 +115,9 @@ export class Inventario {
     }
 
     listarInverso(){
+        if(this.primero === null){
+            return `No hay productos en el inventario`;
+        }
         let texto = "";
         let auxiliar = this.primero;
 
@@ -109,15 +129,44 @@ export class Inventario {
     }
 
     extraerPrimerElemento(){
+        if(this.primero === null){
+            return `No hay productos en el inventario`;
+        }
         let auxiliar = this.primero;
-        this.primero = this.primero.siguiente;
-        return `Se extrajo el producto ${auxiliar.nombre}`;
+        if(this.primero.siguiente === null){
+            this.primero = null;
+        } else {
+            this.primero = this.primero.siguiente;
+            this.primero.anterior = null;
+        }
+
+        return `Se extrajo el primer elemento: ${auxiliar.nombre}`;
     }
 
     extraerUltimoElemento(){
-        let auxiliar = this.primero;
-        this.primero = this.primero.siguiente;
-        return `Se extrajo el producto ${auxiliar.nombre}`;
+        if(this.primero === null){
+            return `No hay productos en el inventario`;
+        }
+        let nodo = this.primero;
+        let auxiliar;
+
+        if(this.primero.siguiente === null){
+            auxiliar = this.primero;
+            this.primero = null;
+            return `Se extrajo el ultimo elemento ${auxiliar.nombre}`;
+        }
+
+        while(nodo){
+            if(nodo.siguiente === null){
+                auxiliar = nodo;
+                nodo = nodo.anterior;
+                nodo.siguiente.anterior = null;
+                nodo.siguiente = null;
+                break;
+            }
+            nodo = nodo.siguiente;
+        }
+        return `Se extrajo el ultimo elemento ${auxiliar.nombre}`;
     }
 
 }
